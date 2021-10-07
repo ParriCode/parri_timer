@@ -12,7 +12,6 @@ class NewWindow():
         newWin.config(bg="black")
         e_new_timer = tk.Entry(newWin, font=("Dejavu", 20, "bold"))
         e_new_timer.insert(tk.END, "name")
-
         e_new_timer.grid(row=0, column=0)
         tk.Label(newWin, text="Press Enter*", fg="yellow", bg="black", font=("Arial", 15, "italic")).grid(row=1,sticky=tk.W)
         newWin.bind("<Return>", DESTROY)

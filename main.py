@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import tkinter as tk
+from tkinter import messagebox
 import time
 import datetime
 import csv
@@ -33,12 +34,14 @@ class TimerButtons():
         self.timerbutton = {}
         self.textbutton = {}
         self.PlaceButton()
-        self.lbl = tk.Label(frame, textvariable= "0:0:0",bg = "black",fg = "yellow",font=("ds-digital",200,"bold") )
+        self.lbl = tk.Label(frame, textvariable= "0:0:0",bg = "black",fg = "yellow",font=("ds-digital",200,"bold"))
+        self.lbl1 = tk.Label(root, text="", bg="black", fg="yellow", font=("Arial", 30, "bold"))
         self.lbl.place(x = 50,y=50)
+        self.lbl1.place(x=500, y=660)
     def PlaceButton(self):
         X = 250
         for timer in  data.data:
-            if mytree.eye_button[timer]["text"] == "T":
+            if mytree.eye_button[timer]["text"] == "T" and len(self.timerbutton)<=5:
                 def show(p=timer):
                     return self.ShowButton(p)
                 def func(x=timer):
@@ -53,11 +56,13 @@ class TimerButtons():
                 def delete(y = timer):
                     return self.DeleteButton(y)
                 def restart(j = timer):
-                    if self.timerbutton[j]["start_button"]["text"] == "■":
-                        self.timerbutton[j]["start_button"]["text"] = "►"
-                        self.timerbutton[j]["button"]["highlightbackground"] = "white"
-                    self.timer.runtimer[j]["text"].set("00:00:00")
-                    return self.timer.RestartTimer(j)
+                    ans = tk.messagebox.askyesno(title="parri-detele-timer", message="Are you sure?")
+                    if ans == True:
+                        if self.timerbutton[j]["start_button"]["text"] == "■":
+                            self.timerbutton[j]["start_button"]["text"] = "►"
+                            self.timerbutton[j]["button"]["highlightbackground"] = "white"
+                        self.timer.runtimer[j]["text"].set("00:00:00")
+                        return self.timer.RestartTimer(j)
                 X += 190
                 s = str(data.data[timer]["s"])
                 m = str(data.data[timer]["m"])
@@ -81,7 +86,7 @@ class TimerButtons():
                 self.timerbutton[timer]["button"].config(bg="black",width = 7, fg="yellow",bd = 10,font=("ds-digital", 22, "bold"))
 
                 self.timerbutton[timer].update({"start_button": tk.Button(frm,text = "►",command = func)})
-                self.timerbutton[timer]["start_button"].config(bg="black",bd = 0,highlightbackground= "black" ,fg="yellow", font=("Arial", 25, "bold"))
+                self.timerbutton[timer]["start_button"].config(bg="black",bd = 0,highlightbackground= "black" ,fg=yew, font=("Arial", 25, "bold"))
                 self.timerbutton[timer]["start_button"].grid(row = 2,column =0 ,sticky = tk.W)
 
                 self.timerbutton[timer].update({"trush_button": tk.Button(frm, image = img_trush1_timer ,command = delete)})
@@ -103,6 +108,7 @@ class TimerButtons():
         self.PlaceButton()
     def ShowButton(self,name):
         self.lbl["textvariable"] = self.timer.runtimer[name]["text"]
+        self.lbl1["text"] = "Creating date: "+data.data[name]["date"]
     def AddButton(self,name):
         for TIMER in self.timerbutton:
             self.timer.StopTimer(TIMER)
@@ -120,14 +126,16 @@ class TimerButtons():
     def QuitButton(self,btn):
         self.timer.StopTimer(btn)
     def DeleteButton(self,btn):
-        self.timer.StopTimer(btn)
-        data.Delete(btn)
-        mytree.reset_tree()
-        for element in self.timerbutton[btn].keys():
-            self.timerbutton[btn][element].destroy()
-        self.timerbutton.pop(btn)
-        self.timer.runtimer.pop(btn)
-        self.ReplaceButton(btn)
+        ans = tk.messagebox.askyesno(title="parri-detele-timer", message="Are you sure?")
+        if ans == True:
+            self.timer.StopTimer(btn)
+            data.Delete(btn)
+            mytree.reset_tree()
+            for element in self.timerbutton[btn].keys():
+                self.timerbutton[btn][element].destroy()
+            self.timerbutton.pop(btn)
+            self.timer.runtimer.pop(btn)
+            self.ReplaceButton(btn)
 class Timer:
     def __init__(self):
         self.init = 0
@@ -193,7 +201,7 @@ class TimerTree:
                     self.eye_button[x]["image"] = img_open_eye
                     self.eye_button[x]["text"] = "T"
                     for timer in mytimer.timerbutton: mytimer.QuitButton(timer)
-                    mytimer.PlaceButton()
+                    mytimer.ReplaceButton(x)
                 else:
                     self.eye_button[x]["text"] = "F"
                     self.eye_button[x]["image"] = img_close_eye
@@ -242,11 +250,13 @@ frame.place(x = 440,y = 250)
 #creating the imges for the program
 img_title = tk.PhotoImage(file = "./images/title.png")
 img_add_timer = tk.PhotoImage(file = "./images/add_timer.png")
+img_config = tk.PhotoImage(file = "./images/gear.png")
 img_trush_timer = tk.PhotoImage(file = "./images/trash.png")
 img_reload = tk.PhotoImage(file = "./images/reload.png").subsample(3,3)
 img_trush1_timer = tk.PhotoImage(file = "./images/trash.png").subsample(3,3)
 img_open_eye = tk.PhotoImage(file = "./images/open_eye.png").subsample(3,3)
 img_close_eye = tk.PhotoImage(file = "./images/close_eye.png").subsample(3,3)
+yew = "#faea01"
 #starting the three objects
 data = Data() #starting the data base
 mytree = TimerTree() #starting the Timer tree
@@ -255,15 +265,12 @@ mytimer = TimerButtons() #starting all the timer_buttons
 lbl_title = tk.Label(root,image = img_title,bg = "black")
 #btn add timer
 btn_add_timer = tk.Button(root,image = img_add_timer,bd = 0,bg = "black",highlightbackground= "black",command = CreateNewTimer)
+#btn_config = tk.Button(root,image = img_config,bd = 0,bg = "black",highlightbackground= "black",command = CreateNewTimer)
 #grid the title and the butotn
 lbl_title.grid(row = 0,column = 0,sticky= tk.W)
 btn_add_timer.grid(row = 1,column = 0,padx = 10,pady = 10,sticky = tk.W)
+#btn_config.grid(row = 1,column = 1,padx = 10,pady = 10,sticky = tk.W)
 
 root.protocol('WM_DELETE_WINDOW',data.Close)
 root.mainloop()
-
-
-
-
-
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
