@@ -256,6 +256,7 @@ img_reload = tk.PhotoImage(file = "./images/reload.png").subsample(3,3)
 img_trush1_timer = tk.PhotoImage(file = "./images/trash.png").subsample(3,3)
 img_open_eye = tk.PhotoImage(file = "./images/open_eye.png").subsample(3,3)
 img_close_eye = tk.PhotoImage(file = "./images/close_eye.png").subsample(3,3)
+#set color variable
 yew = "#faea01"
 #starting the three objects
 data = Data() #starting the data base
