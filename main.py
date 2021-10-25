@@ -188,7 +188,7 @@ class Timer:
                 S = int(data.data[name]["S"])-s
                 if M<0: M = 60+M ; H = H-1
                 if S < 0: S = 60 +S
-                if S < 0 or M < 0 or H < 0 or S >int(data.data[name]["S"]or(S,M,H) == (0,0,0)):
+                if S < 0 or M < 0 or H < 0 or(S,M,H) == (0,0,0):
                     data.data[name]["s"] = int(data.data[name]["S"])
                     data.data[name]["m"] = int(data.data[name]["M"])
                     data.data[name]["h"] = int(data.data[name]["H"])
