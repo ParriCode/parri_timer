@@ -83,11 +83,14 @@ class TimerButtons():
 
             self.timerbutton[timer].update({"button" :tk.Button(frm, textvariable = self.timer.runtimer[timer]["text"],command = show)})
             self.timerbutton[timer]["button"].config(bg="black",width = 7, fg="yellow",bd = 10,font=("ds-digital", 22, "bold"))
-
+            if data.data[timer]["all"] == "True":
+                self.timerbutton[timer]["button"]["highlightbackground"] = "blue"
             self.timerbutton[timer].update({"start_button": tk.Button(frm,text = "►",command = func)})
             self.timerbutton[timer]["start_button"].config(bg="black",bd = 0,highlightbackground= "black" ,fg=yew, font=("Arial", 25, "bold"))
 
             self.timerbutton[timer].update({"trush_button": tk.Button(frm, image = img_trush1_timer ,command = delete)})
+
+
             self.timerbutton[timer]["trush_button"].config(width = 50,heigh = 50,bd = 0,bg = "black",highlightbackground= "black",activebackground = "red")
 
             self.timerbutton[timer].update({"reload_button": tk.Button(frm, image = img_reload, padx=20,command = restart)})
@@ -236,7 +239,10 @@ class Timer:
                             if data.data[name]["alarm"] == "True": playsound('./sounds/alarm.wav')
                             if data.data[name]["reset"] == "True": self.StartTimer(name)
                             else:
-                                mytimer.timerbutton[name]["button"]["highlightbackground"] = "white"
+                                if data.data[name]["all"] == "True":
+                                    mytimer.timerbutton[name]["button"]["highlightbackground"] = "blue"
+                                else:
+                                    mytimer.timerbutton[name]["button"]["highlightbackground"] = "white"
                                 mytimer.timerbutton[name]["start_button"]["text"] = "►"
                     s = str(self.runtimer[name]["time"][0])
                     m = str(self.runtimer[name]["time"][1])
@@ -247,7 +253,10 @@ class Timer:
                     self.runtimer[name]["text"].set(f"{h}:{m}:{s}")
         self.after = root.after(100,self.RunTimer)
     def StopTimer(self,name):
-        mytimer.timerbutton[name]["button"]["highlightbackground"] = "white"
+        if data.data[name]["all"] == "True":
+            mytimer.timerbutton[name]["button"]["highlightbackground"] = "blue"
+        else:
+            mytimer.timerbutton[name]["button"]["highlightbackground"] = "white"
         mytimer.timerbutton[name]["start_button"]["text"] = "►"
         self.runtimer[name]["run"] = False
         if self.runtimer[name]["time"] != [0,0,0] or not data.data[name]["keeper"]=="True":
@@ -261,9 +270,9 @@ class Timer:
             s = data.data[name]["s"]
             m = data.data[name]["m"]
             h = data.data[name]["h"]
-            if len(s) < 2: s = "0" + s
-            if len(m) < 2: m = "0" + m
-            if len(h) < 2: h = "0" + h
+            if len(str(s)) < 2: s = "0" + str(s)
+            if len(str(m)) < 2: m = "0" + str(m)
+            if len(str(h)) < 2: h = "0" + str(h)
             self.runtimer[name]["time"][0] = int(s)
             self.runtimer[name]["time"][1] = int(m)
             self.runtimer[name]["time"][2] = int(h)
